@@ -7,7 +7,7 @@ export default function Pallete() {
         <div className='Pallete-colors'>
             {/* bunch of color boxes */}
         </div>
-        {/* footer later */}
+        {/* footer later yo */}
     </div>
   )
 }
