@@ -13,7 +13,11 @@ export default function Pallete(props) {
   }  
   return (
     <div className='Pallete'>
-        <Slider defaultValue={level} min={100} max={900} step={100} onChangeComplete={changeLevel}/>
+        <div className='slider'>
+            <Slider defaultValue={level} min={100} max={900} step={100} onChangeComplete={changeLevel}/>
+
+
+        </div>
         {/* navbar goes here */}
         <div className='Pallete-colors'>
             {/* bunch of color boxes */}
