@@ -7,6 +7,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import {  Link } from 'react-router-dom';
+
 
 export default function Navbar(props) {
   const {level,changeLevel}  = props
@@ -24,7 +26,7 @@ export default function Navbar(props) {
   return (
    <header className='Navbar'>
     <div className='logo'>
-        <a href='/'>ColorPicker</a>
+        <Link to={'/'}>ColorPicker</Link>
     </div>   
         <div className='slider-container'>
         <div className='slider'>
