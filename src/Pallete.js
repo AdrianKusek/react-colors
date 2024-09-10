@@ -7,8 +7,9 @@ import Navbar from './Navbar';
 export default function Pallete(props) {
   const [level, setLevel]  = useState(500)  
   const [format, setFormat] = useState('hex')
+  const {paletteName,emoji} = props.pallete
  
-  const colorBoxes = props.pallete.colors[level].map(color =>(<ColorBox background={color[format]} name={color.name}/>))
+  const colorBoxes = props.pallete.colors[level].map(color =>(<ColorBox background={color[format]} name={color.name} key={color.id}/>))
   const changeLevel = (newLevel)=>{
     setLevel(newLevel)
 
@@ -27,7 +28,11 @@ export default function Pallete(props) {
             {/* bunch of color boxes */}
         {colorBoxes}    
         </div>
-        {/* footer later yo */}
+        <footer className='Pallete-footer'>
+            {paletteName}
+            <span className='emoji'> {emoji}</span>
+
+        </footer>
     </div>
   )
 }
