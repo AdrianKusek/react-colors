@@ -18,11 +18,16 @@ function App() {
       const foundPalette = findPallete(id); // Find the palette by ID
       return <Pallete pallete={generatePalette(foundPalette)} />;
     }
+    function SingleColorPalleteWithId() {
+      const { paletteId,colorId } = useParams(); // Get the 'id' from the URL
+      const foundPalette = findPallete(paletteId); // Find the palette by ID
+      return <SingleColorPalette pallete={generatePalette(foundPalette)} color={colorId} />;
+    }
   return (
     <Routes>
         <Route path="/" element={<PalleteList pallets={seedColors}/>}  />
         <Route path="/pallete/:id" element={ <PalleteWithId/>} />
-        <Route path="/pallete/:paletteId/:colorId" element={ <SingleColorPalette/>} />
+        <Route path="/pallete/:paletteId/:colorId" element={ <SingleColorPalleteWithId/>} />
       </Routes>
     // <div>
     //   <Pallete pallete =  {generatePalette(seedColors[4])}/>

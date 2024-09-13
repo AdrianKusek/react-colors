@@ -9,7 +9,7 @@ export default function Pallete(props) {
   const [format, setFormat] = useState('hex')
   const {paletteName,emoji,id} = props.pallete
  
-  const colorBoxes = props.pallete.colors[level].map(color =>(<ColorBox background={color[format]} name={color.name} key={color.id} id={color.id} paletteId={id}/>))
+  const colorBoxes = props.pallete.colors[level].map(color =>(<ColorBox background={color[format]} name={color.name} showLink={true} key={color.id} id={color.id} paletteId={id}/>))
   const changeLevel = (newLevel)=>{
     setLevel(newLevel)
 
