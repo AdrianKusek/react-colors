@@ -11,7 +11,7 @@ import {  Link } from 'react-router-dom';
 
 
 export default function Navbar(props) {
-  const {level,changeLevel}  = props
+  const {level,changeLevel,showSlider}  = props
   const [format, setFormat] = useState('hex')
   const [open, setOpen] = useState(false)
   const handleChange = (e) =>{
@@ -27,8 +27,9 @@ export default function Navbar(props) {
    <header className='Navbar'>
     <div className='logo'>
         <Link to={'/'}>ColorPicker</Link>
-    </div>   
-        <div className='slider-container'>
+    </div> 
+     
+        {showSlider && <div className='slider-container'>
         <div className='slider'>
             <span>Level: {level}</span>
             <Slider defaultValue={level} min={100} max={900} step={100} onChangeComplete={changeLevel}/>
@@ -36,12 +37,12 @@ export default function Navbar(props) {
 
         </div>
 
-        </div>
+        </div>}
         <div className='select-container'>
             <Select value={format} onChange={handleChange}>
-                <MenuItem value='hex' >Hex  </MenuItem>
-                <MenuItem value='rgb' >rgb </MenuItem>
-                <MenuItem value='rgba' >rgba </MenuItem>
+                <MenuItem value='hex' >HEX #ffffff  </MenuItem>
+                <MenuItem value='rgb' >RGB (255, 255, 255) </MenuItem>
+                <MenuItem value='rgba' >RGBA (255, 255, 255, 1.0) </MenuItem>
 
             </Select>
             <Snackbar anchorOrigin={{vertical: 'bottom', horizontal:'left'}}
