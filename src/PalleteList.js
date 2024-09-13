@@ -2,9 +2,14 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import MiniPalette from './MiniPallete';
 import PalleteListStyles from './styles/PalleteListStyles';
+import { useNavigate } from 'react-router-dom';
 
 export default function PalleteList(props) {
-  const pallets = props.pallets;
+  const pallets = props.pallets; 
+  const goTo = useNavigate()
+  const goToPallete = (id) => { 
+    goTo(`/pallete/${id}`)
+  }
 
   return (
     <Box sx={PalleteListStyles.root}>
@@ -14,7 +19,7 @@ export default function PalleteList(props) {
         </Box>
         <Box sx={PalleteListStyles.palettes}>
           {pallets.map(palette => (
-            <MiniPalette key={palette.id} {...palette} />
+            <MiniPalette key={palette.id} {...palette} handleClick={() => goToPallete(palette.id)} />
           ))}
         </Box>
       </Box>
