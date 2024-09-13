@@ -4,6 +4,7 @@ import { generatePalette } from "./colorHelpers";
 import { Routes, Route, useParams } from 'react-router-dom';
 import PalleteList from "./PalleteList";
 import SingleColorPalette from "./SingleColorPalette";
+import NewPaletteForm from "./NewPaletteForm";
 
 function App() {
   function findPallete(id){
@@ -25,9 +26,11 @@ function App() {
     }
   return (
     <Routes>
+      
         <Route path="/" element={<PalleteList pallets={seedColors}/>}  />
         <Route path="/pallete/:id" element={ <PalleteWithId/>} />
         <Route path="/pallete/:paletteId/:colorId" element={ <SingleColorPalleteWithId/>} />
+        <Route path="/pallete/new" element={ <NewPaletteForm/>} />
       </Routes>
     // <div>
     //   <Pallete pallete =  {generatePalette(seedColors[4])}/>
