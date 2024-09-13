@@ -1,9 +1,10 @@
 import React from 'react';
-import { AppBar, Box, CssBaseline, Drawer, IconButton, Toolbar, Typography, Divider } from '@mui/material';
+import { AppBar, Box, CssBaseline, Drawer, IconButton, Toolbar, Typography, Divider, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { ChromePicker } from 'react-color';
 
-const drawerWidth = 240;
+const drawerWidth = 400;
 
 export default function NewPaletteForm() {
   const [open, setOpen] = React.useState(false);
@@ -62,6 +63,11 @@ export default function NewPaletteForm() {
         <Divider />
         <Box sx={{ overflow: 'auto' }}>
           {/* Add drawer content here */}
+          <Typography variant='h4'>Design Your Palette</Typography>
+          <Button variant='contained' color='secondary'>Clear Palette</Button>
+          <Button variant='contained' color='primary'>Random Color</Button>
+          <ChromePicker/>
+          <Button variant='contained' color='primary'>ADD COLOR</Button>
         </Box>
       </Drawer>
 
@@ -78,6 +84,7 @@ export default function NewPaletteForm() {
         <Toolbar />
         <Typography paragraph>
           Main content goes here.
+         
         </Typography>
       </Box>
     </Box>
