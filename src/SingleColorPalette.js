@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import ColorBox from './ColorBox'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import {  Link } from 'react-router-dom';
+
 
 export default function SingleColorPalette(props) {
 
@@ -12,7 +14,7 @@ export default function SingleColorPalette(props) {
    }
 
   const {pallete, color}  = props
-  const {paletteName, emoji} = pallete
+  const {paletteName, emoji,id} = pallete
   const gatherShades = (palette,colorToFilterBy)  =>{
     let shades = []
     let allColors = palette.colors
@@ -25,15 +27,18 @@ export default function SingleColorPalette(props) {
   }
   const shades = gatherShades(pallete,color)
   console.log(shades)
-  const ColorBoxes = shades.map((shade) =>(<ColorBox key={shade.id} name={shade.name} background={shade[format]} showLink={false}/>))
+  const ColorBoxes = shades.map((shade) =>(<ColorBox key={shade.name} name={shade.name} background={shade[format]} showLink={false}/>))
 
  
   return (
-    <div className='Pallete'>
+    <div className='SingleColorPalette Pallete'>
         <Navbar handleChange={changeFormat} showSlider={false}/>
        
     <div className='Pallete-colors'>
     {ColorBoxes}
+    <div className='go-back ColorBox'>
+        <Link to={`/pallete/${id}`} className='back-button'>GO BACK</Link>
+    </div>
 
     </div>
     <Footer paletteName={paletteName} emoji={emoji}/>
