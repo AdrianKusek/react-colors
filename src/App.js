@@ -6,6 +6,7 @@ import PalleteList from "./PalleteList";
 import SingleColorPalette from "./SingleColorPalette";
 import NewPaletteForm from "./NewPaletteForm";
 
+
 function App() {
   function findPallete(id){
     return seedColors.find(function(pallete){
@@ -26,6 +27,8 @@ function App() {
     }
   return (
     <Routes>
+                
+
       
         <Route path="/" element={<PalleteList pallets={seedColors}/>}  />
         <Route path="/pallete/:id" element={ <PalleteWithId/>} />
