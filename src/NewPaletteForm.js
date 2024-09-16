@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { AppBar, Box, CssBaseline, Drawer, IconButton, Toolbar, Typography, Divider, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { ChromePicker, SketchPicker} from 'react-color';
-import { HexColorPicker } from "react-colorful";
-
+import { ChromePicker } from 'react-color';
+import DraggableColorBox from './DraggableColorBox';
 
 const drawerWidth = 400;
 
@@ -14,20 +13,23 @@ export default function NewPaletteForm() {
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
-  const [color, setColor] = useState('blue'); // define a state for the color prop
-  const [colors,setColors] = useState(['red','blue'])
+
+  const [color, setColor] = useState('blue');
+  const [colors, setColors] = useState(['red', 'blue']);
+
   const handleChange = (c) => {
     setColor(c.hex);
   };
 
-  const addColor = (newColor)=>{
-    setColors([...colors, newColor])
-    console.log(colors, 'array state')
-  }
+  const addColor = (newColor) => {
+    setColors([...colors, newColor]);
+    console.log(colors, 'array state');
+  };
+
   const handleAddColor = () => {
-    addColor(color)
-    console.log('in handle')
-  }
+    addColor(color);
+    console.log('in handle');
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -37,8 +39,7 @@ export default function NewPaletteForm() {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${open ? drawerWidth : 0}px)` },
-          ml: { sm: `${open ? drawerWidth : 0}px` },
+          width: `calc(100% - ${open ? drawerWidth : 0}px)`,
           transition: 'width 0.3s ease',
         }}
       >
@@ -79,15 +80,17 @@ export default function NewPaletteForm() {
         <Divider />
         <Box sx={{ overflow: 'auto' }}>
           {/* Add drawer content here */}
-          <Typography variant='h4'>Design Your Palette</Typography>
-          <Button variant='contained' color='secondary'>Clear Palette</Button>
-          <Button variant='contained' color='primary'>Random Color</Button>
-          <ChromePicker color={color}
-           onChange={handleChange}
-           onChangeComplete={newColor => console.log(newColor,'yo')}/>
-         
- 
-          <Button onClick={handleAddColor} variant='contained' color='primary' style={{backgroundColor:color}}>ADD COLOR</Button>
+          <Typography variant="h4">Design Your Palette</Typography>
+          <Button variant="contained" color="secondary">
+            Clear Palette
+          </Button>
+          <Button variant="contained" color="primary">
+            Random Color
+          </Button>
+          <ChromePicker color={color} onChange={handleChange} onChangeComplete={(newColor) => console.log(newColor, 'yo')} />
+          <Button onClick={handleAddColor} variant="contained" color="primary" style={{ backgroundColor: color }}>
+            ADD COLOR
+          </Button>
         </Box>
       </Drawer>
 
@@ -97,18 +100,16 @@ export default function NewPaletteForm() {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${open ? drawerWidth : 0}px)` },
-          transition: 'width 0.3s ease',
+          ml: `${open ? drawerWidth : 0}px`, // Add this line to shift content to the right
+          transition: 'margin-left 0.3s ease', // Smooth transition for content
+          height: '100vh',
         }}
       >
         <Toolbar />
-        <Typography paragraph>
-          Main content goes here.
-          <ul>
-            {colors.map((color)=>(<li>{color}</li>))}
-          </ul>
-         
-        </Typography>
+        <Typography paragraph>Main content goes here.</Typography>
+        {colors.map((color) => (
+          <DraggableColorBox color={color} key={color} />
+        ))}
       </Box>
     </Box>
   );
