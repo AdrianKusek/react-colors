@@ -1,24 +1,51 @@
 import React, { useState } from 'react';
-import { AppBar, Box, CssBaseline, Drawer, IconButton, Toolbar, Typography, Divider, Button } from '@mui/material';
+import { AppBar, Box, CssBaseline, Drawer, IconButton, Toolbar, Typography, Divider, Button, TextField } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { ChromePicker } from 'react-color';
-import DraggableColorBox from './DraggableColorBox';
+import DraggableColorBox from './DraggableColorBox'; // Adjust this component if necessary
+import { useForm } from 'react-hook-form';
 
 const drawerWidth = 400;
 
 export default function NewPaletteForm() {
   const [open, setOpen] = useState(false);
+  const [color, setColor] = useState('blue');
+  const [colors, setColors] = useState([]);
+  const [error, setError] = useState(''); // State for error messages
+
+  // Initialize React Hook Form
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const newName = watch('name', '');
 
   const handleDrawerToggle = () => {
     setOpen(!open);
   };
 
-  const [color, setColor] = useState('blue');
-  const [colors, setColors] = useState(['red', 'blue']);
-
   const handleChange = (c) => {
     setColor(c.hex);
+  };
+
+  const handleAddColor = () => {
+    // Convert newName to lowercase for case-insensitive comparison
+    const lowerCaseName = newName.toLowerCase();
+
+    // Check if the color name already exists (case-insensitive)
+    if (colors.some(colorObj => colorObj.name.toLowerCase() === lowerCaseName)) {
+      setError('Color name must be unique!');
+      return;
+    }
+
+    // Check if the color already exists
+    if (colors.some(colorObj => colorObj.hex === color)) {
+      setError('Color already used!');
+      return;
+    }
+
+    // Clear the error if the name and color are unique
+    setError('');
+    addColor({ hex: color, name: newName });
+    console.log('Color added:', { hex: color, name: newName });
   };
 
   const addColor = (newColor) => {
@@ -26,9 +53,9 @@ export default function NewPaletteForm() {
     console.log(colors, 'array state');
   };
 
-  const handleAddColor = () => {
-    addColor(color);
-    console.log('in handle');
+  // Handle form submission
+  const onSubmit = (data) => {
+    handleAddColor(); // Add color to the list
   };
 
   return (
@@ -88,9 +115,23 @@ export default function NewPaletteForm() {
             Random Color
           </Button>
           <ChromePicker color={color} onChange={handleChange} onChangeComplete={(newColor) => console.log(newColor, 'yo')} />
-          <Button onClick={handleAddColor} variant="contained" color="primary" style={{ backgroundColor: color }}>
-            ADD COLOR
-          </Button>
+
+          {/* Form for adding a new color */}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              label="Name"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              {...register('name', { required: 'Name is required' })}
+              value={newName}
+              error={!!errors.name || !!error}
+              helperText={errors.name ? errors.name.message : error}
+            />
+            <Button type="submit" variant="contained" color="primary" style={{ backgroundColor: color }}>
+              ADD COLOR
+            </Button>
+          </form>
         </Box>
       </Drawer>
 
@@ -107,8 +148,8 @@ export default function NewPaletteForm() {
       >
         <Toolbar />
         <Typography paragraph>Main content goes here.</Typography>
-        {colors.map((color) => (
-          <DraggableColorBox color={color} key={color} />
+        {colors.map((colorObj) => (
+          <DraggableColorBox color={colorObj.hex} name={colorObj.name} key={colorObj.hex} />
         ))}
       </Box>
     </Box>
