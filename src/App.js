@@ -38,7 +38,7 @@ function App() {
         <Route path="/" element={<PalleteList pallets={palettes}/>}  />
         <Route path="/pallete/:id" element={ <PalleteWithId/>} />
         <Route path="/pallete/:paletteId/:colorId" element={ <SingleColorPalleteWithId/>} />
-        <Route path="/pallete/new" element={ <NewPaletteForm savePalette={savePalette}/>} />
+        <Route path="/pallete/new" element={ <NewPaletteForm palettes={palettes} savePalette={savePalette}/>} />
       </Routes>
     // <div>
     //   <Pallete pallete =  {generatePalette(seedColors[4])}/>

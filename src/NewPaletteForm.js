@@ -10,15 +10,18 @@ import { useNavigate } from 'react-router-dom';
 const drawerWidth = 400;
 
 export default function NewPaletteForm(props) {
+  const { palettes, savePalette } = props;
   const [open, setOpen] = useState(false);
   const [color, setColor] = useState('blue');
   const [colors, setColors] = useState([]);
-  const [error, setError] = useState(''); // State for error messages
-  const savePalette = props.savePalette
+  const [colorError, setColorError] = useState(''); // State for color name errors
+  const [paletteNameError, setPaletteNameError] = useState(''); // State for palette name errors
 
-  // Initialize React Hook Form
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const newName = watch('name', '');
+  const { register, handleSubmit, watch, trigger, formState: { errors } } = useForm();
+  const newColorName = watch('colorName', '');
+  const paletteName = watch('paletteName', '');
+
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -29,49 +32,65 @@ export default function NewPaletteForm(props) {
   };
 
   const handleAddColor = () => {
-    // Convert newName to lowercase for case-insensitive comparison
-    const lowerCaseName = newName.toLowerCase();
+    const lowerCaseName = newColorName.toLowerCase();
 
-    // Check if the color name already exists (case-insensitive)
     if (colors.some(colorObj => colorObj.name.toLowerCase() === lowerCaseName)) {
-      setError('Color name must be unique!');
+      setColorError('Color name must be unique!');
       return;
     }
 
-    // Check if the color already exists
-    if (colors.some(colorObj => colorObj.hex === color)) {
-      setError('Color already used!');
+    if (colors.some(colorObj => colorObj.color === color)) {
+      setColorError('Color already used!');
       return;
     }
 
-    // Clear the error if the name and color are unique
-    setError('');
-    addColor({ color: color, name: newName });
+    setColorError('');
+    addColor({ color: color, name: newColorName });
   };
 
   const addColor = (newColor) => {
     setColors([...colors, newColor]);
   };
 
-  // Handle form submission
-  const onSubmit = (data) => {
+  // Custom validation function for unique palette name
+  const isPaletteNameUnique = (name) => {
+    return !palettes.some(palette => palette.paletteName.toLowerCase() === name.toLowerCase());
+  };
+
+  // Handle form submission for adding color
+  const onSubmitColor = (event) => {
+    event.preventDefault();
     handleAddColor(); // Add color to the list
   };
-  const navigate = useNavigate();
-  const handleSavePalette = ()=>{
-    const newName = 'Test palette'
 
-    const newPalette = {
-
-        paletteName: newName,
-        id: newName.toLowerCase().replace(/ /g, '-'),
-        colors: colors
+  // Handle form submission for saving the palette
+  const onSubmitPalette = async (data) => {
+    // Trigger validation for the palette name
+    const isPaletteNameValid = await trigger('paletteName');
+    
+    if (!isPaletteNameValid) {
+      // If validation fails, set the palette name error state
+      setPaletteNameError('Palette name is required');
+      return;
     }
 
-    savePalette(newPalette)
-    navigate('/')
+    if (!isPaletteNameUnique(data.paletteName)) {
+      // Check if the palette name is unique
+      setPaletteNameError('Palette name must be unique');
+      return;
+    }
 
-  }
+    setPaletteNameError(''); // Clear the error if validation passes
+
+    const newPalette = {
+      paletteName: data.paletteName,
+      id: data.paletteName.toLowerCase().replace(/ /g, '-'),
+      colors: colors
+    }
+
+    savePalette(newPalette);
+    navigate('/');
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -98,7 +117,19 @@ export default function NewPaletteForm(props) {
           <Typography variant="h6" noWrap component="div">
             Persistent Drawer
           </Typography>
-          <Button onClick={handleSavePalette} variant='contained' color='secondary'> Save Palette</Button>
+          {/* Form for saving the palette */}
+          <form onSubmit={handleSubmit(onSubmitPalette)}>
+            <TextField
+              label="Palette Name"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              {...register('paletteName', { required: true })}
+              error={!!paletteNameError}
+              helperText={paletteNameError || (errors.paletteName ? 'Palette name is required' : '')}
+            />
+            <Button type="submit" variant="contained" color="secondary">Save Palette</Button>
+          </form>
         </Toolbar>
       </AppBar>
 
@@ -115,14 +146,12 @@ export default function NewPaletteForm(props) {
         }}
       >
         <Toolbar>
-          {/* Close button in the right corner */}
           <IconButton onClick={handleDrawerToggle} sx={{ ml: 'auto' }}>
             <ChevronLeftIcon />
           </IconButton>
         </Toolbar>
         <Divider />
         <Box sx={{ overflow: 'auto' }}>
-          {/* Add drawer content here */}
           <Typography variant="h4">Design Your Palette</Typography>
           <Button variant="contained" color="secondary">
             Clear Palette
@@ -130,19 +159,19 @@ export default function NewPaletteForm(props) {
           <Button variant="contained" color="primary">
             Random Color
           </Button>
-          <ChromePicker color={color} onChange={handleChange} onChangeComplete={(newColor) => console.log('yo')} />
+          <ChromePicker color={color} onChange={handleChange} />
 
           {/* Form for adding a new color */}
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmitColor}>
             <TextField
-              label="Name"
+              label="Color Name"
               variant="outlined"
               fullWidth
               margin="normal"
-              {...register('name', { required: 'Name is required' })}
-              value={newName}
-              error={!!errors.name || !!error}
-              helperText={errors.name ? errors.name.message : error}
+              {...register('colorName', { required: 'Color name is required' })}
+              value={newColorName}
+              error={!!errors.colorName || !!colorError}
+              helperText={errors.colorName ? errors.colorName.message : colorError}
             />
             <Button type="submit" variant="contained" color="primary" style={{ backgroundColor: color }}>
               ADD COLOR
@@ -165,7 +194,7 @@ export default function NewPaletteForm(props) {
         <Toolbar />
         <Typography paragraph>Main content goes here.</Typography>
         {colors.map((colorObj) => (
-          <DraggableColorBox color={colorObj.color} name={colorObj.name} key={colorObj.hex} />
+          <DraggableColorBox color={colorObj.color} name={colorObj.name} key={colorObj.name} />
         ))}
       </Box>
     </Box>

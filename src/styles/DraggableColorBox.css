@@ -8,3 +8,16 @@
    margin-bottom: -3.5px;
 
 }
+.box-content-flex{
+   display: flex;
+   justify-content: space-between;
+}
+.DraggableColorBox:hover .delete-icon{
+
+   color: white;
+   transform: scale(1.4);
+
+}
+.delete-icon{
+   transition: all 0.3s ease-in-out; /* Smooth color transition */
+}
