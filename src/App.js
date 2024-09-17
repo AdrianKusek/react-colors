@@ -5,14 +5,19 @@ import { Routes, Route, useParams } from 'react-router-dom';
 import PalleteList from "./PalleteList";
 import SingleColorPalette from "./SingleColorPalette";
 import NewPaletteForm from "./NewPaletteForm";
+import { useState } from "react";
 
 
 function App() {
+  const[palettes, setPalettes] = useState(seedColors)
   function findPallete(id){
-    return seedColors.find(function(pallete){
+    return palettes.find(function(pallete){
       return pallete.id === id
     })
 
+  }
+  function savePalette(newPalette){
+    setPalettes([...palettes, newPalette])
   }
     // This component is rendered inside the route for the palette
     function PalleteWithId() {
@@ -30,10 +35,10 @@ function App() {
                 
 
       
-        <Route path="/" element={<PalleteList pallets={seedColors}/>}  />
+        <Route path="/" element={<PalleteList pallets={palettes}/>}  />
         <Route path="/pallete/:id" element={ <PalleteWithId/>} />
         <Route path="/pallete/:paletteId/:colorId" element={ <SingleColorPalleteWithId/>} />
-        <Route path="/pallete/new" element={ <NewPaletteForm/>} />
+        <Route path="/pallete/new" element={ <NewPaletteForm savePalette={savePalette}/>} />
       </Routes>
     // <div>
     //   <Pallete pallete =  {generatePalette(seedColors[4])}/>

@@ -10,7 +10,7 @@ export default function PalleteList(props) {
   const goToPallete = (id) => { 
     goTo(`/pallete/${id}`)
   }
-
+  console.log(pallets,' from render palletes')
   return (
     <Box sx={PalleteListStyles.root}>
       <Box sx={PalleteListStyles.container}>

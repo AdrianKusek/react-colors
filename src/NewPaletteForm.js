@@ -5,14 +5,16 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { ChromePicker } from 'react-color';
 import DraggableColorBox from './DraggableColorBox'; // Adjust this component if necessary
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 400;
 
-export default function NewPaletteForm() {
+export default function NewPaletteForm(props) {
   const [open, setOpen] = useState(false);
   const [color, setColor] = useState('blue');
   const [colors, setColors] = useState([]);
   const [error, setError] = useState(''); // State for error messages
+  const savePalette = props.savePalette
 
   // Initialize React Hook Form
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -44,19 +46,32 @@ export default function NewPaletteForm() {
 
     // Clear the error if the name and color are unique
     setError('');
-    addColor({ hex: color, name: newName });
-    console.log('Color added:', { hex: color, name: newName });
+    addColor({ color: color, name: newName });
   };
 
   const addColor = (newColor) => {
     setColors([...colors, newColor]);
-    console.log(colors, 'array state');
   };
 
   // Handle form submission
   const onSubmit = (data) => {
     handleAddColor(); // Add color to the list
   };
+  const navigate = useNavigate();
+  const handleSavePalette = ()=>{
+    const newName = 'Test palette'
+
+    const newPalette = {
+
+        paletteName: newName,
+        id: newName.toLowerCase().replace(/ /g, '-'),
+        colors: colors
+    }
+
+    savePalette(newPalette)
+    navigate('/')
+
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -83,6 +98,7 @@ export default function NewPaletteForm() {
           <Typography variant="h6" noWrap component="div">
             Persistent Drawer
           </Typography>
+          <Button onClick={handleSavePalette} variant='contained' color='secondary'> Save Palette</Button>
         </Toolbar>
       </AppBar>
 
@@ -114,7 +130,7 @@ export default function NewPaletteForm() {
           <Button variant="contained" color="primary">
             Random Color
           </Button>
-          <ChromePicker color={color} onChange={handleChange} onChangeComplete={(newColor) => console.log(newColor, 'yo')} />
+          <ChromePicker color={color} onChange={handleChange} onChangeComplete={(newColor) => console.log('yo')} />
 
           {/* Form for adding a new color */}
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -149,7 +165,7 @@ export default function NewPaletteForm() {
         <Toolbar />
         <Typography paragraph>Main content goes here.</Typography>
         {colors.map((colorObj) => (
-          <DraggableColorBox color={colorObj.hex} name={colorObj.name} key={colorObj.hex} />
+          <DraggableColorBox color={colorObj.color} name={colorObj.name} key={colorObj.hex} />
         ))}
       </Box>
     </Box>
