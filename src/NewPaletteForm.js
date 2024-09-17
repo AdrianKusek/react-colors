@@ -91,6 +91,9 @@ export default function NewPaletteForm(props) {
     savePalette(newPalette);
     navigate('/');
   };
+  const removeColor = (colorName) =>{
+    setColors(colors.filter(color=>color.name !== colorName))
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -194,7 +197,7 @@ export default function NewPaletteForm(props) {
         <Toolbar />
         <Typography paragraph>Main content goes here.</Typography>
         {colors.map((colorObj) => (
-          <DraggableColorBox color={colorObj.color} name={colorObj.name} key={colorObj.name} />
+          <DraggableColorBox color={colorObj.color} name={colorObj.name} key={colorObj.name} handleClick={removeColor} />
         ))}
       </Box>
     </Box>
